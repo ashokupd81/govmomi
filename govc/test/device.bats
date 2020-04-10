@@ -238,6 +238,19 @@ load test_helper
   [ $result -eq 1 ]
 }
 
+@test "device.scsi" {
+  esx_env
+
+  vm=$(new_empty_vm)
+
+  run govc device.scsi.add -vm $vm
+  assert_success
+  id=$output
+  
+  result=$(govc device.ls -vm $vm | grep $id | wc -l)
+  [ $result -eq 1 ]
+}
+
 @test "device.usb" {
   esx_env
 
