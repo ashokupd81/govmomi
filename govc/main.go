@@ -35,6 +35,7 @@ import (
 	_ "github.com/vmware/govmomi/govc/device/cdrom"
 	_ "github.com/vmware/govmomi/govc/device/floppy"
 	_ "github.com/vmware/govmomi/govc/device/scsi"
+	_ "github.com/vmware/govmomi/govc/device/nvme"
 	_ "github.com/vmware/govmomi/govc/device/serial"
 	_ "github.com/vmware/govmomi/govc/device/usb"
 	_ "github.com/vmware/govmomi/govc/disk"
