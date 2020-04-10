@@ -4,12 +4,12 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"strings"
+	//"strings"
 
 	"github.com/vmware/govmomi/govc/cli"
 	"github.com/vmware/govmomi/govc/flags"
-	"github.com/vmware/govmomi/object"
-	"github.com/vmware/govmomi/vim25/types"
+	//"github.com/vmware/govmomi/object"
+	//"github.com/vmware/govmomi/vim25/types"
 )
 
 type add struct {
@@ -63,7 +63,7 @@ func (cmd *add) Run(ctx context.Context, f *flag.FlagSet) error {
 	if err != nil {
 		return err
 	}
-	err = vm.AddDevice(ctx, d)
+	err = vm.AddDevice(ctx, nvme)
 	if err != nil {
 		return err
 	}
@@ -74,7 +74,7 @@ func (cmd *add) Run(ctx context.Context, f *flag.FlagSet) error {
 		return err
 	}
 
-	devices = devices.SelectByType(d)
+	devices = devices.SelectByType(nvme)
 
 	name := devices.Name(devices[len(devices)-1])
 
