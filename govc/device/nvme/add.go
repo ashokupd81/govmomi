@@ -31,7 +31,7 @@ func (cmd *add) Register(ctx context.Context, f *flag.FlagSet) {
 }
 
 func (cmd *add) Description() string {
-        return `Add NVME controller to VM.
+        return `Add NVME  controller to VM.
 
 Examples:
   govc device.scsi.add -vm $vm`
