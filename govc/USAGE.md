@@ -4342,6 +4342,10 @@ Examples:
   vmware-rpctool "info-get guestinfo.vmname"
   govc vm.change -vm $vm -latency high
   govc vm.change -vm $vm -latency normal
+  govc vm.change -vm $vm -encryptedvMotion required
+  govc vm.change -vm $vm -encryptedvMotion opportunistic
+  govc vm.change -vm $vm -encryptedvMotion disabled
+
   
 
 Options:
@@ -4469,7 +4473,7 @@ Options:
   -net.address=          Network hardware address
   -on=true               Power on VM
   -pool=                 Resource pool [GOVC_RESOURCE_POOL]
-  -version=              ESXi hardware version [5.0|5.5|6.0|6.5|6.7]
+  -version=              ESXi hardware version [5.0|5.5|6.0|6.5|6.7|7.0]
 ```
 
 ## vm.customize

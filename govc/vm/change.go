@@ -48,12 +48,38 @@ type change struct {
 	*flags.ResourceAllocationFlag
 
 	types.VirtualMachineConfigSpec
-	extraConfig extraConfig
-	Latency     string
+	extraConfig      extraConfig
+	Latency          string
+	EncryptedvMotion string
 }
 
 func init() {
 	cli.Register("vm.change", &change{})
+}
+
+var encryptedvMotionLevel = []string{
+
+	string(types.VirtualMachineConfigSpecEncryptedVMotionModesDisabled),
+	string(types.VirtualMachineConfigSpecEncryptedVMotionModesOpportunistic),
+	string(types.VirtualMachineConfigSpecEncryptedVMotionModesRequired),
+}
+
+// setEncryptedvMotion validates EncryptedvMotion mode if set
+func (cmd *change) setEncryptedvMotion() error {
+
+	if cmd.EncryptedvMotion == "" {
+		return nil
+	}
+	for _, ev := range encryptedvMotionLevel {
+		if ev == cmd.EncryptedvMotion {
+
+			cmd.MigrateEncryption = cmd.EncryptedvMotion
+			return nil
+
+		}
+
+	}
+	return fmt.Errorf("EncryptedvMotion  must be one of: %s", strings.Join(encryptedvMotionLevel, "|"))
 }
 
 var latencyLevels = []string{
@@ -116,6 +142,7 @@ func (cmd *change) Register(ctx context.Context, f *flag.FlagSet) {
 	f.StringVar(&cmd.GuestId, "g", "", "Guest OS")
 	f.StringVar(&cmd.Name, "name", "", "Display name")
 	f.StringVar(&cmd.Latency, "latency", "", fmt.Sprintf("Latency sensitivity (%s)", strings.Join(latencyLevels, "|")))
+	f.StringVar(&cmd.EncryptedvMotion, "encryptedvMotion", "", fmt.Sprintf("EncryptedvMotion Mode (%s)", strings.Join(encryptedvMotionLevel, "|")))
 	f.StringVar(&cmd.Annotation, "annotation", "", "VM description")
 	f.Var(&cmd.extraConfig, "e", "ExtraConfig. <key>=<value>")
 
@@ -142,6 +169,10 @@ Examples:
   vmware-rpctool "info-get guestinfo.vmname"
   govc vm.change -vm $vm -latency high
   govc vm.change -vm $vm -latency normal
+  govc vm.change -vm $vm -encryptedvMotion required
+  govc vm.change -vm $vm -encryptedvMotion opportunistic
+  govc vm.change -vm $vm -encryptedvMotion disabled
+
   `
 }
 
@@ -173,6 +204,10 @@ func (cmd *change) Run(ctx context.Context, f *flag.FlagSet) error {
 	}
 
 	if err = cmd.setLatency(); err != nil {
+		return err
+	}
+
+	if err = cmd.setEncryptedvMotion(); err != nil {
 		return err
 	}
 
